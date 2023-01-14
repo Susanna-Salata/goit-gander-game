@@ -47,7 +47,7 @@ while is_working:
 
         if event.type == CREATE_ENEMY:
             enemies.append(create_enemy())
-
+         
     pressed_keys = pygame.key.get_pressed()
 
     main_surface.fill(BLACK)
@@ -64,25 +64,25 @@ while is_working:
         if ball_rect.colliderect(enemy[1]):
             enemies.pop(enemies.index(enemy))
 
-    if pressed_keys[K_DOWN]:
+    if pressed_keys[K_DOWN] and not ball_rect.bottom >= height:
         ball_rect = ball_rect.move(0, ball_speed)
 
-    if pressed_keys[K_UP]:
-        ball_rect = ball_rect.move(0, -ball_speed)
+    if pressed_keys[K_UP] and not ball_rect.top < 0:
+        ball_rect = ball_rect.move(0, - ball_speed)
 
-    if pressed_keys[K_RIGHT]:
+    if pressed_keys[K_RIGHT] and not ball_rect.right >= width:
         ball_rect = ball_rect.move(ball_speed, 0)
 
-    if pressed_keys[K_LEFT]:
-        ball_rect = ball_rect.move(-ball_speed, 0)
+    if pressed_keys[K_LEFT] and not ball_rect.left < 0:
+        ball_rect = ball_rect.move( - ball_speed, 0)
     
     #if ball_rect.bottom >= height or ball_rect.top <= 0:
         #ball.fill(GREEN)
         #ball_speed = - ball_speed
     
-    if ball_rect.right >= width or ball_rect.left <= 0:
+    #if ball_rect.right >= width or ball_rect.left <= 0:
         #ball.fill(RED)
-        ball_speed = - ball_speed
+        #ball_speed = - ball_speed
         
     
     #main_surface.fill((155, 155, 155))
