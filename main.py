@@ -41,7 +41,7 @@ def create_bonus():
     bonus_speed = random.randint(1, 3)
     return [bonus, bonus_rect, bonus_speed]
 
-CREATE_BONUS = pygame.USEREVENT + 1
+CREATE_BONUS = pygame.USEREVENT + 2
 pygame.time.set_timer(CREATE_BONUS, 2500)
 
 bonuses = []
@@ -82,13 +82,15 @@ while is_working:
     for bonus in bonuses:
         bonus[1] = bonus[1].move(0, bonus[2])
         main_surface.blit(bonus[0], bonus[1])
+        #print(len(bonuses))
 
-        if bonus[1].bottom < 0:
+        if bonus[1].bottom > height:
             bonuses.pop(bonuses.index(bonus))
-
+            #print(len(bonuses))
+            
         if ball_rect.colliderect(bonus[1]):
             bonuses.pop(bonuses.index(bonus))
-
+            
     if pressed_keys[K_DOWN] and not ball_rect.bottom >= height:
         ball_rect = ball_rect.move(0, ball_speed)
 
