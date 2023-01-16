@@ -1,7 +1,7 @@
 import pygame
 import random
 from pygame.constants import QUIT, K_DOWN, K_UP, K_RIGHT, K_LEFT
-
+from os import listdir
 
 pygame.init()
 
@@ -14,13 +14,16 @@ WHITE = 255, 255, 255
 GREEN = 0, 255, 0
 RED = 255, 0, 0
 
+IMGS_PATH = 'goose'
+
 font = pygame.font.SysFont('Verdana', 20)
 
 main_surface = pygame.display.set_mode(screen)
 
 # ball = pygame.Surface((20, 20))
 # ball.fill(WHITE)
-ball = pygame.transform.scale(pygame.image.load("player.png").convert_alpha(), (100, 60))
+player_imgs = [pygame.transform.scale(pygame.image.load(IMGS_PATH + '/' + file).convert_alpha(), (100, 60)) for file in listdir(IMGS_PATH)]
+ball = player_imgs[0]
 ball_rect = ball.get_rect()
 ball_speed = 5
 
@@ -54,10 +57,14 @@ pygame.time.set_timer(CREATE_ENEMY, 1500)
 CREATE_BONUS = pygame.USEREVENT + 2
 pygame.time.set_timer(CREATE_BONUS, 2500)
 
+CHANGE_IMG = pygame.USEREVENT + 3
+pygame.time.set_timer(CHANGE_IMG, 125)
+
 enemies = []
 bonuses = []
 
 scores = 0
+img_index = 0
 
 is_working = True
 
@@ -75,6 +82,12 @@ while is_working:
     
         if event.type == CREATE_BONUS:
             bonuses.append(create_bonus())
+
+        if event.type == CHANGE_IMG:
+            img_index += 1
+            if img_index == len(player_imgs):
+                img_index = 0
+            ball = player_imgs[img_index]
          
     pressed_keys = pygame.key.get_pressed()
 
