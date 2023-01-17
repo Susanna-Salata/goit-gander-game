@@ -2,6 +2,7 @@ import pygame
 import random
 from pygame.constants import QUIT, K_DOWN, K_UP, K_RIGHT, K_LEFT
 from os import listdir
+from time import sleep
 
 pygame.init()
 
@@ -35,7 +36,7 @@ bg_speed = 2
 
 
 def create_enemy():
-    enemy = pygame.Surface((20, 20))
+    #enemy = pygame.Surface((20, 20))
     #enemy.fill(RED)
     enemy = pygame.transform.scale(pygame.image.load("enemy.png").convert_alpha(), (100, 20))
     enemy_rect = pygame.Rect(width, random.randint(0, height), *enemy.get_size())
@@ -43,8 +44,15 @@ def create_enemy():
     return [enemy, enemy_rect, enemy_speed]
 
 
+def create_fire(x, y):
+    fire = pygame.transform.scale(pygame.image.load("fire.png").convert_alpha(), (600, 600))
+    fire_rect = pygame.Rect(x, y, *fire.get_size())
+    fire_speed = 0
+    return [fire, fire_rect, fire_speed]
+
+
 def create_bonus():
-    bonus = pygame.Surface((20, 20))
+    #bonus = pygame.Surface((20, 20))
     #bonus.fill(GREEN)
     bonus = pygame.transform.scale(pygame.image.load("bonus.png").convert_alpha(), (50, 100))
     bonus_rect = pygame.Rect(random.randint(0, width), 0, *bonus.get_size())
@@ -60,8 +68,12 @@ pygame.time.set_timer(CREATE_BONUS, 2500)
 CHANGE_IMG = pygame.USEREVENT + 3
 pygame.time.set_timer(CHANGE_IMG, 125)
 
+COLLISION = pygame.USEREVENT + 4
+pygame.time.set_timer(COLLISION, 0)
+
 enemies = []
 bonuses = []
+fire = [create_fire(100, 0)]
 
 scores = 0
 img_index = 0
@@ -88,7 +100,9 @@ while is_working:
             if img_index == len(player_imgs):
                 img_index = 0
             ball = player_imgs[img_index]
-         
+        
+        #if event.type == COLLISION:
+                   
     pressed_keys = pygame.key.get_pressed()
 
     # main_surface.fill(WHITE)
@@ -119,6 +133,9 @@ while is_working:
             enemies.pop(enemies.index(enemy))
 
         if ball_rect.colliderect(enemy[1]):
+            main_surface.blit(fire[0][0],fire[0][1])
+            # create_fire(50, 50)
+            #sleep(10)
             is_working = False
 
     for bonus in bonuses:
@@ -134,7 +151,7 @@ while is_working:
             bonuses.pop(bonuses.index(bonus))
             scores += 1
             #print(scores)
-            
+
     if pressed_keys[K_DOWN] and not ball_rect.bottom >= height:
         ball_rect = ball_rect.move(0, ball_speed)
 
